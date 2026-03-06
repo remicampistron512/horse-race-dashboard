@@ -1,0 +1,3 @@
+export interface Kpis { totalRaces:number; totalHorses:number; winRate:number; placeRate:number; averageEarnings:number; averageOdds:number; roiWinner:number; roiPlaced:number; }
+export interface RaceResultRow { id:number; date:string; racecourse:string; race:string; horse:string; jockeyOrDriver:string; trainer:string; distance:number; groundCondition:string; odds:number; finishPosition:number; earnings:number; roiSimulated:number; }
+export interface HorseDetail { id:number; name:string; age:number; sex:string; trainer:string; habitualJockeyOrDriver:string; recentForm:string; totalEarnings:number; formIndex:number; lastRaces:any[]; }

@@ -1,0 +1,6 @@
+.filters { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; align-items: center; }
+.kpis { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin: 16px 0; }
+.charts { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); margin-bottom: 16px; }
+.two-cols { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); margin-top: 16px; }
+table { width: 100%; }
+.detail-pane { width: 320px; padding: 16px; }
