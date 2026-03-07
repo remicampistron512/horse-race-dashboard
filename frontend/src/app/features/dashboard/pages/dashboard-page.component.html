@@ -1,132 +1,226 @@
-<div class="page">
-  <section class="page-header">
-    <h1>Tableau de bord PMU</h1>
-    <p>Analysez rapidement les résultats des courses et comparez les hippodromes.</p>
-  </section>
-
-  <mat-card class="surface-card filters-card">
-    <form [formGroup]="filtersForm" class="filters">
-      <mat-form-field appearance="outline">
-        <mat-label>Date</mat-label>
-        <input matInput type="date" formControlName="date" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Hippodrome</mat-label>
-        <input matInput formControlName="hippo" placeholder="VINCENNES" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Prix</mat-label>
-        <input matInput formControlName="prix" placeholder="DE BELGIQUE" />
-      </mat-form-field>
-
-      <div class="actions">
-        <button mat-raised-button color="primary" type="button" (click)="search()">Rechercher</button>
-        <button mat-stroked-button type="button" (click)="reset()">Réinitialiser</button>
+<div class="dashboard-shell">
+  <div class="dashboard-container">
+    <section class="dashboard-hero surface-card">
+      <div>
+        <p class="hero-eyebrow">Horse Racing Intelligence</p>
+        <h1>Tableau de bord PMU</h1>
+        <p class="hero-subtitle">
+          Explorez les performances par hippodrome, analysez les tendances et inspectez rapidement chaque course.
+        </p>
       </div>
-    </form>
-  </mat-card>
+      <mat-chip class="hero-chip" highlighted>
+        <mat-icon>bolt</mat-icon>
+        Live PMU Analysis
+      </mat-chip>
+    </section>
 
-  <div class="content-grid">
-    <mat-card class="surface-card chart-card">
-      <h3>Résultats par hippodrome</h3>
-      <p class="card-subtitle">Nombre de résultats disponibles par lieu.</p>
-      <div class="chart-wrapper">
-        <canvas baseChart [data]="raceByHippoChartData" [type]="'bar'"></canvas>
+    <mat-card class="surface-card filters-card">
+      <div class="section-header">
+        <div>
+          <h2>Filtres de recherche</h2>
+          <p>Affinez les résultats par date, hippodrome ou nom de prix.</p>
+        </div>
       </div>
+
+      <form [formGroup]="filtersForm" class="filters" (ngSubmit)="search()">
+        <mat-form-field appearance="outline">
+          <mat-label>Date</mat-label>
+          <input matInput type="date" formControlName="date" />
+          <mat-icon matSuffix>calendar_today</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hippodrome</mat-label>
+          <input matInput formControlName="hippo" placeholder="VINCENNES" />
+          <mat-icon matSuffix>location_on</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Prix</mat-label>
+          <input matInput formControlName="prix" placeholder="DE BELGIQUE" />
+          <mat-icon matSuffix>emoji_events</mat-icon>
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit">
+            <mat-icon>search</mat-icon>
+            Rechercher
+          </button>
+          <button mat-stroked-button type="button" (click)="reset()">
+            <mat-icon>restart_alt</mat-icon>
+            Réinitialiser
+          </button>
+        </div>
+      </form>
     </mat-card>
 
-    <mat-card class="surface-card details-card">
-      <h3>Détail de la course sélectionnée</h3>
-      <p class="card-subtitle">Cliquez sur une ligne du tableau pour voir les informations complètes.</p>
-      <ng-container *ngIf="selectedResult as race; else noSelection">
-        <div class="details-grid">
-          <p class="stat-item"><mat-icon>calendar_today</mat-icon><strong>Date:</strong> {{ race.date }}</p>
-          <p class="stat-item"><mat-icon>category</mat-icon><strong>Type:</strong> {{ race.type }}</p>
-          <p class="stat-item"><mat-icon>location_on</mat-icon><strong>Lieu:</strong> {{ race.lieu }}</p>
-          <p class="stat-item"><mat-icon>emoji_events</mat-icon><strong>Prix:</strong> {{ race.pix }}</p>
-          <p class="stat-item"><mat-icon>payments</mat-icon><strong>Montant:</strong> {{ race.montant }}</p>
-          <p class="stat-item"><mat-icon>straighten</mat-icon><strong>Distance:</strong> {{ race.distance }}</p>
-          <p class="stat-item"><mat-icon>route</mat-icon><strong>R/C:</strong> {{ race['r/c'] }}</p>
-          <p class="stat-item"><mat-icon>groups</mat-icon><strong>Partants:</strong> {{ race.partants }}</p>
-          <p class="stat-item"><mat-icon>person_off</mat-icon><strong>Non partants:</strong> {{ race.non_partants }}</p>
-          <p class="stat-item"><mat-icon>flag</mat-icon><strong>Arrivée:</strong> {{ race.arrivee }}</p>
-          <p class="stat-item"><mat-icon>notes</mat-icon><strong>Détails:</strong> {{ race.details }}</p>
+    <section class="kpi-grid">
+      <mat-card class="surface-card kpi-card" *ngFor="let card of kpiCards; trackBy: trackByKpiLabel">
+        <div class="kpi-head">
+          <p>{{ card.label }}</p>
+          <mat-icon>{{ card.icon }}</mat-icon>
         </div>
-      </ng-container>
-      <ng-template #noSelection>
-        <p class="empty-state">Sélectionnez une ligne dans le tableau pour afficher les détails.</p>
-      </ng-template>
+        <p class="kpi-value">{{ card.value }}</p>
+        <p class="kpi-meta">{{ card.supportingText }}</p>
+      </mat-card>
+    </section>
+
+    <section class="content-grid">
+      <mat-card class="surface-card chart-card">
+        <div class="section-header">
+          <div>
+            <h2>Répartition par hippodrome</h2>
+            <p>Visualisez immédiatement les hippodromes les plus représentés dans la sélection actuelle.</p>
+          </div>
+        </div>
+
+        <div class="chart-wrapper">
+          <canvas
+            baseChart
+            [data]="raceByHippoChartData"
+            [options]="raceByHippoChartOptions"
+            [type]="'bar'"
+          ></canvas>
+        </div>
+      </mat-card>
+
+      <mat-card class="surface-card details-card" [class.details-card--active]="selectedResult">
+        <div class="section-header">
+          <div>
+            <h2>Course sélectionnée</h2>
+            <p>Consultez les informations clés et les détails de la course active.</p>
+          </div>
+        </div>
+
+        <ng-container *ngIf="selectedResult as race; else noSelection">
+          <div class="details-grid">
+            <div class="detail-item">
+              <span>Date</span>
+              <strong>{{ race.date }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Type</span>
+              <strong>{{ race.type }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Hippodrome</span>
+              <strong>{{ race.lieu }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Prix</span>
+              <strong>{{ race.pix }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Montant</span>
+              <strong>{{ race.montant }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Distance</span>
+              <strong>{{ race.distance }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>R/C</span>
+              <strong>{{ race['r/c'] }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Partants</span>
+              <strong>{{ race.partants }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Non partants</span>
+              <strong>{{ race.non_partants }}</strong>
+            </div>
+            <div class="detail-item">
+              <span>Arrivée</span>
+              <strong>{{ race.arrivee }}</strong>
+            </div>
+          </div>
+          <div class="details-note">
+            <span>Détails complémentaires</span>
+            <p>{{ race.details }}</p>
+          </div>
+        </ng-container>
+
+        <ng-template #noSelection>
+          <p class="empty-state">Sélectionnez une ligne dans le tableau pour afficher le détail complet de la course.</p>
+        </ng-template>
+      </mat-card>
+    </section>
+
+    <mat-card class="surface-card table-card">
+      <div class="section-header">
+        <div>
+          <h2>Historique des résultats</h2>
+          <p>Sélectionnez une ligne pour synchroniser le panneau de détails et comparer rapidement les courses.</p>
+        </div>
+      </div>
+
+      <div class="state" *ngIf="loading">
+        <mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
+        <span>Chargement des résultats PMU...</span>
+      </div>
+
+      <p class="error" *ngIf="!loading && errorMessage">{{ errorMessage }}</p>
+      <p class="empty" *ngIf="!loading && !errorMessage && dataSource.data.length === 0">
+        Aucun résultat trouvé avec les filtres saisis.
+      </p>
+
+      <div class="table-wrapper" *ngIf="!loading && dataSource.data.length > 0">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let row">{{ row.date }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="lieu">
+            <th mat-header-cell *matHeaderCellDef>Hippodrome</th>
+            <td mat-cell *matCellDef="let row">{{ row.lieu }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let row">{{ row.type }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="distance">
+            <th mat-header-cell *matHeaderCellDef>Distance</th>
+            <td mat-cell *matCellDef="let row" class="numeric-cell">{{ row.distance }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="montant">
+            <th mat-header-cell *matHeaderCellDef>Montant</th>
+            <td mat-cell *matCellDef="let row" class="numeric-cell">{{ row.montant }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="pix">
+            <th mat-header-cell *matHeaderCellDef>Prix</th>
+            <td mat-cell *matCellDef="let row">{{ row.pix }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="r/c">
+            <th mat-header-cell *matHeaderCellDef>R/C</th>
+            <td mat-cell *matCellDef="let row" class="numeric-cell">{{ row['r/c'] }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="partants">
+            <th mat-header-cell *matHeaderCellDef>Partants</th>
+            <td mat-cell *matCellDef="let row" class="numeric-cell">{{ row.partants }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="arrivee">
+            <th mat-header-cell *matHeaderCellDef>Arrivée</th>
+            <td mat-cell *matCellDef="let row">{{ row.arrivee }}</td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: displayedColumns"
+            (click)="selectResult(row)"
+            [class.selected-row]="selectedResult === row"
+          ></tr>
+        </table>
+      </div>
     </mat-card>
   </div>
-
-  <mat-card class="surface-card table-card">
-    <div class="state" *ngIf="loading">
-      <mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
-      <span>Chargement des résultats PMU...</span>
-    </div>
-
-    <p class="error" *ngIf="!loading && errorMessage">{{ errorMessage }}</p>
-    <p class="empty" *ngIf="!loading && !errorMessage && dataSource.data.length === 0">
-      Aucun résultat trouvé avec les filtres saisis.
-    </p>
-
-    <div class="table-wrapper" *ngIf="!loading && dataSource.data.length > 0">
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef>Date</th>
-          <td mat-cell *matCellDef="let row">{{ row.date }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="lieu">
-          <th mat-header-cell *matHeaderCellDef>Hippodrome</th>
-          <td mat-cell *matCellDef="let row">{{ row.lieu }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="type">
-          <th mat-header-cell *matHeaderCellDef>Type</th>
-          <td mat-cell *matCellDef="let row">{{ row.type }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="distance">
-          <th mat-header-cell *matHeaderCellDef>Distance</th>
-          <td mat-cell *matCellDef="let row">{{ row.distance }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="montant">
-          <th mat-header-cell *matHeaderCellDef>Montant</th>
-          <td mat-cell *matCellDef="let row">{{ row.montant }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="pix">
-          <th mat-header-cell *matHeaderCellDef>Prix</th>
-          <td mat-cell *matCellDef="let row">{{ row.pix }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="r/c">
-          <th mat-header-cell *matHeaderCellDef>R/C</th>
-          <td mat-cell *matCellDef="let row">{{ row['r/c'] }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="partants">
-          <th mat-header-cell *matHeaderCellDef>Partants</th>
-          <td mat-cell *matCellDef="let row">{{ row.partants }}</td>
-        </ng-container>
-
-        <ng-container matColumnDef="arrivee">
-          <th mat-header-cell *matHeaderCellDef>Arrivée</th>
-          <td mat-cell *matCellDef="let row">{{ row.arrivee }}</td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          (click)="selectResult(row)"
-          [class.selected-row]="selectedResult === row"
-        ></tr>
-      </table>
-    </div>
-  </mat-card>
 </div>

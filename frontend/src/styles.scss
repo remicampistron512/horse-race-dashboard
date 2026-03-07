@@ -2,30 +2,33 @@
 
 @include mat.core();
 
-$primary: mat.define-palette(mat.$indigo-palette, 500);
+$primary: mat.define-palette(mat.$indigo-palette, 700, 500, 900);
 $accent: mat.define-palette(mat.$blue-palette, A200, A100, A400);
 
 $theme: mat.define-light-theme((
   color: (
     primary: $primary,
-    accent: $accent
-  )
+    accent: $accent,
+  ),
+  typography: mat.define-typography-config(
+    $font-family: 'Inter, Roboto, "Helvetica Neue", Arial, sans-serif',
+  ),
 ));
 
 @include mat.all-component-themes($theme);
 
-html, body {
+html,
+body {
   height: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Inter, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  color: #202a42;
+  background: linear-gradient(180deg, #f4f6fb 0%, #eef2f8 100%);
 }
-
-body {
-  background: #f5f7fb;
-}
-
-.page { padding: 16px; }
-.grid { display: grid; gap: 16px; }
