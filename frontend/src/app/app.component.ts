@@ -6,6 +6,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet, MatToolbarModule],
-  template: `<mat-toolbar color="primary">Dashboard Statistiques Hippiques</mat-toolbar><router-outlet />`,
+  template: `
+    <mat-toolbar color="primary">PMU Race Results Dashboard</mat-toolbar>
+    <router-outlet></router-outlet>
+  `,
 })
 export class AppComponent {}
