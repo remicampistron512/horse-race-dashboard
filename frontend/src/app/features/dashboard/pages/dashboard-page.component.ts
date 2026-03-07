@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatChipsModule } from '@angular/material/chips';
 import { ApiService } from '../../../core/services/api.service';
 import { RaceResult, RaceSearchFilters } from '../../../models/dashboard.models';
 
@@ -17,6 +18,13 @@ interface DashboardFilters {
   date: FormControl<string | null>;
   hippo: FormControl<string | null>;
   prix: FormControl<string | null>;
+}
+
+interface KpiCard {
+  label: string;
+  value: string;
+  supportingText: string;
+  icon: string;
 }
 
 @Component({
@@ -32,6 +40,7 @@ interface DashboardFilters {
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatChipsModule,
   ],
   templateUrl: './dashboard-page.component.html',
   styleUrl: './dashboard-page.component.scss',
@@ -65,8 +74,47 @@ export class DashboardPageComponent implements OnInit {
       {
         label: 'Nombre de résultats',
         data: [],
+        borderRadius: 6,
+        maxBarThickness: 34,
+        backgroundColor: '#3f51b5cc',
+        hoverBackgroundColor: '#3446af',
       },
     ],
+  };
+
+  readonly raceByHippoChartOptions: ChartConfiguration<'bar'>['options'] = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#5f6b82',
+          font: {
+            family: 'Inter, Roboto, Arial, sans-serif',
+          },
+        },
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: '#5f6b82',
+          precision: 0,
+          font: {
+            family: 'Inter, Roboto, Arial, sans-serif',
+          },
+        },
+        grid: {
+          color: '#edf1f7',
+        },
+      },
+    },
   };
 
   loading = false;
@@ -78,6 +126,57 @@ export class DashboardPageComponent implements OnInit {
   }
 
   constructor(private api: ApiService) {}
+
+  get kpiCards(): KpiCard[] {
+    const results = this.dataSource.data;
+    const totalResults = results.length;
+    const hippodromes = new Set(results.map((item) => item.lieu || 'Inconnu')).size;
+
+    const distanceValues = results
+      .map((item) => this.parseNumber(item.distance))
+      .filter((value): value is number => value !== null);
+
+    const montantValues = results
+      .map((item) => this.parseNumber(item.montant))
+      .filter((value): value is number => value !== null);
+
+    const averageDistance =
+      distanceValues.length > 0
+        ? Math.round(distanceValues.reduce((sum, value) => sum + value, 0) / distanceValues.length)
+        : null;
+
+    const averageMontant =
+      montantValues.length > 0
+        ? Math.round(montantValues.reduce((sum, value) => sum + value, 0) / montantValues.length)
+        : null;
+
+    return [
+      {
+        label: 'Total résultats',
+        value: totalResults.toLocaleString('fr-FR'),
+        supportingText: 'Courses correspondant aux filtres',
+        icon: 'query_stats',
+      },
+      {
+        label: 'Hippodromes actifs',
+        value: hippodromes.toLocaleString('fr-FR'),
+        supportingText: 'Lieux présents dans la sélection',
+        icon: 'location_city',
+      },
+      {
+        label: 'Distance moyenne',
+        value: averageDistance !== null ? `${averageDistance.toLocaleString('fr-FR')} m` : '—',
+        supportingText: 'Calculée sur les courses disponibles',
+        icon: 'straighten',
+      },
+      {
+        label: 'Montant moyen',
+        value: averageMontant !== null ? `${averageMontant.toLocaleString('fr-FR')} €` : '—',
+        supportingText: 'Allocation moyenne observée',
+        icon: 'payments',
+      },
+    ];
+  }
 
   search(): void {
     this.loadResults();
@@ -91,6 +190,10 @@ export class DashboardPageComponent implements OnInit {
 
   selectResult(row: RaceResult): void {
     this.selectedResult = row;
+  }
+
+  trackByKpiLabel(_: number, card: KpiCard): string {
+    return card.label;
   }
 
   private loadResults(): void {
@@ -131,6 +234,20 @@ export class DashboardPageComponent implements OnInit {
     }
 
     return `${day}/${month}/${year}`;
+  }
+
+  private parseNumber(value: string): number | null {
+    if (!value) {
+      return null;
+    }
+
+    const normalized = value.replace(/\s/g, '').replace(',', '.').match(/\d+(\.\d+)?/);
+    if (!normalized) {
+      return null;
+    }
+
+    const parsed = Number(normalized[0]);
+    return Number.isFinite(parsed) ? parsed : null;
   }
 
   private updateCharts(results: RaceResult[]): void {

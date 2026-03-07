@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatToolbarModule],
+  imports: [RouterOutlet],
   template: `
-    <mat-toolbar color="primary">PMU Race Results Dashboard</mat-toolbar>
     <router-outlet></router-outlet>
   `,
 })
