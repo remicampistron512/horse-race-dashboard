@@ -5,7 +5,7 @@ import { OpenPmuApiResponse, RaceResult, RaceSearchFilters } from '../../models/
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly baseUrl = 'https://open-pmu-api.vercel.app/api';
+  private readonly baseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 
@@ -13,14 +13,9 @@ export class ApiService {
     const params = this.toParams(filters);
 
     return this.http
-      .get<OpenPmuApiResponse>(`${this.baseUrl}/arrivee`, { params })
+      .get<OpenPmuApiResponse>(`${this.baseUrl}/pmu-results`, { params })
       .pipe(
         map((response) => this.unwrapResults(response)),
-        catchError(() =>
-          this.http
-            .get<OpenPmuApiResponse>(`${this.baseUrl}/arrivees`, { params })
-            .pipe(map((response) => this.unwrapResults(response))),
-        ),
         catchError((error) => {
           const message = error?.message ?? 'Impossible de récupérer les données PMU.';
           return throwError(() => new Error(message));
