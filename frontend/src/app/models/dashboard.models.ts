@@ -1,3 +1,24 @@
-export interface Kpis { totalRaces:number; totalHorses:number; winRate:number; placeRate:number; averageEarnings:number; averageOdds:number; roiWinner:number; roiPlaced:number; }
-export interface RaceResultRow { id:number; date:string; racecourse:string; race:string; horse:string; jockeyOrDriver:string; trainer:string; distance:number; groundCondition:string; odds:number; finishPosition:number; earnings:number; roiSimulated:number; }
-export interface HorseDetail { id:number; name:string; age:number; sex:string; trainer:string; habitualJockeyOrDriver:string; recentForm:string; totalEarnings:number; formIndex:number; lastRaces:any[]; }
+export interface RaceSearchFilters {
+  date?: string;
+  prix?: string;
+  hippo?: string;
+}
+
+export interface OpenPmuApiResponse {
+  error: boolean;
+  message: RaceResult[];
+}
+
+export interface RaceResult {
+  date: string;
+  type: string;
+  montant: string;
+  distance: string;
+  pix: string;
+  lieu: string;
+  'r/c': string;
+  partants: string;
+  non_partants: string;
+  arrivee: string;
+  details: string;
+}

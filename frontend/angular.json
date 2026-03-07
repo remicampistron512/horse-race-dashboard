@@ -14,8 +14,17 @@
             "browser": "src/main.ts",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
-            "styles": ["src/styles.scss"],
-            "assets": ["src/assets"]
+            "styles": [
+              "src/styles.scss"
+            ],
+            "assets": [
+              "src/assets"
+            ],
+            "optimization": {
+              "fonts": {
+                "inline": false
+              }
+            }
           }
         },
         "serve": {
