@@ -32,17 +32,17 @@
     <mat-card>
       <h3>Détail de la course sélectionnée</h3>
       <ng-container *ngIf="selectedResult as race; else noSelection">
-        <p><strong>Date:</strong> {{ race.date }}</p>
-        <p><strong>Type:</strong> {{ race.type }}</p>
-        <p><strong>Lieu:</strong> {{ race.lieu }}</p>
-        <p><strong>Prix:</strong> {{ race.pix }}</p>
-        <p><strong>Montant:</strong> {{ race.montant }}</p>
-        <p><strong>Distance:</strong> {{ race.distance }}</p>
-        <p><strong>R/C:</strong> {{ race['r/c'] }}</p>
-        <p><strong>Partants:</strong> {{ race.partants }}</p>
-        <p><strong>Non partants:</strong> {{ race.non_partants }}</p>
-        <p><strong>Arrivée:</strong> {{ race.arrivee }}</p>
-        <p><strong>Détails:</strong> {{ race.details }}</p>
+        <p class="stat-item"><mat-icon>calendar_today</mat-icon><strong>Date:</strong> {{ race.date }}</p>
+        <p class="stat-item"><mat-icon>category</mat-icon><strong>Type:</strong> {{ race.type }}</p>
+        <p class="stat-item"><mat-icon>location_on</mat-icon><strong>Lieu:</strong> {{ race.lieu }}</p>
+        <p class="stat-item"><mat-icon>emoji_events</mat-icon><strong>Prix:</strong> {{ race.pix }}</p>
+        <p class="stat-item"><mat-icon>payments</mat-icon><strong>Montant:</strong> {{ race.montant }}</p>
+        <p class="stat-item"><mat-icon>straighten</mat-icon><strong>Distance:</strong> {{ race.distance }}</p>
+        <p class="stat-item"><mat-icon>route</mat-icon><strong>R/C:</strong> {{ race['r/c'] }}</p>
+        <p class="stat-item"><mat-icon>groups</mat-icon><strong>Partants:</strong> {{ race.partants }}</p>
+        <p class="stat-item"><mat-icon>person_off</mat-icon><strong>Non partants:</strong> {{ race.non_partants }}</p>
+        <p class="stat-item"><mat-icon>flag</mat-icon><strong>Arrivée:</strong> {{ race.arrivee }}</p>
+        <p class="stat-item"><mat-icon>notes</mat-icon><strong>Détails:</strong> {{ race.details }}</p>
       </ng-container>
       <ng-template #noSelection>
         <p>Sélectionnez une ligne dans le tableau pour afficher les détails.</p>
