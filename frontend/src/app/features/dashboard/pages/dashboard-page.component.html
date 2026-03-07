@@ -1,5 +1,10 @@
 <div class="page">
-  <mat-card>
+  <section class="page-header">
+    <h1>Tableau de bord PMU</h1>
+    <p>Analysez rapidement les résultats des courses et comparez les hippodromes.</p>
+  </section>
+
+  <mat-card class="surface-card filters-card">
     <form [formGroup]="filtersForm" class="filters">
       <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
@@ -24,33 +29,39 @@
   </mat-card>
 
   <div class="content-grid">
-    <mat-card>
+    <mat-card class="surface-card chart-card">
       <h3>Résultats par hippodrome</h3>
-      <canvas baseChart [data]="raceByHippoChartData" [type]="'bar'"></canvas>
+      <p class="card-subtitle">Nombre de résultats disponibles par lieu.</p>
+      <div class="chart-wrapper">
+        <canvas baseChart [data]="raceByHippoChartData" [type]="'bar'"></canvas>
+      </div>
     </mat-card>
 
-    <mat-card>
+    <mat-card class="surface-card details-card">
       <h3>Détail de la course sélectionnée</h3>
+      <p class="card-subtitle">Cliquez sur une ligne du tableau pour voir les informations complètes.</p>
       <ng-container *ngIf="selectedResult as race; else noSelection">
-        <p class="stat-item"><mat-icon>calendar_today</mat-icon><strong>Date:</strong> {{ race.date }}</p>
-        <p class="stat-item"><mat-icon>category</mat-icon><strong>Type:</strong> {{ race.type }}</p>
-        <p class="stat-item"><mat-icon>location_on</mat-icon><strong>Lieu:</strong> {{ race.lieu }}</p>
-        <p class="stat-item"><mat-icon>emoji_events</mat-icon><strong>Prix:</strong> {{ race.pix }}</p>
-        <p class="stat-item"><mat-icon>payments</mat-icon><strong>Montant:</strong> {{ race.montant }}</p>
-        <p class="stat-item"><mat-icon>straighten</mat-icon><strong>Distance:</strong> {{ race.distance }}</p>
-        <p class="stat-item"><mat-icon>route</mat-icon><strong>R/C:</strong> {{ race['r/c'] }}</p>
-        <p class="stat-item"><mat-icon>groups</mat-icon><strong>Partants:</strong> {{ race.partants }}</p>
-        <p class="stat-item"><mat-icon>person_off</mat-icon><strong>Non partants:</strong> {{ race.non_partants }}</p>
-        <p class="stat-item"><mat-icon>flag</mat-icon><strong>Arrivée:</strong> {{ race.arrivee }}</p>
-        <p class="stat-item"><mat-icon>notes</mat-icon><strong>Détails:</strong> {{ race.details }}</p>
+        <div class="details-grid">
+          <p class="stat-item"><mat-icon>calendar_today</mat-icon><strong>Date:</strong> {{ race.date }}</p>
+          <p class="stat-item"><mat-icon>category</mat-icon><strong>Type:</strong> {{ race.type }}</p>
+          <p class="stat-item"><mat-icon>location_on</mat-icon><strong>Lieu:</strong> {{ race.lieu }}</p>
+          <p class="stat-item"><mat-icon>emoji_events</mat-icon><strong>Prix:</strong> {{ race.pix }}</p>
+          <p class="stat-item"><mat-icon>payments</mat-icon><strong>Montant:</strong> {{ race.montant }}</p>
+          <p class="stat-item"><mat-icon>straighten</mat-icon><strong>Distance:</strong> {{ race.distance }}</p>
+          <p class="stat-item"><mat-icon>route</mat-icon><strong>R/C:</strong> {{ race['r/c'] }}</p>
+          <p class="stat-item"><mat-icon>groups</mat-icon><strong>Partants:</strong> {{ race.partants }}</p>
+          <p class="stat-item"><mat-icon>person_off</mat-icon><strong>Non partants:</strong> {{ race.non_partants }}</p>
+          <p class="stat-item"><mat-icon>flag</mat-icon><strong>Arrivée:</strong> {{ race.arrivee }}</p>
+          <p class="stat-item"><mat-icon>notes</mat-icon><strong>Détails:</strong> {{ race.details }}</p>
+        </div>
       </ng-container>
       <ng-template #noSelection>
-        <p>Sélectionnez une ligne dans le tableau pour afficher les détails.</p>
+        <p class="empty-state">Sélectionnez une ligne dans le tableau pour afficher les détails.</p>
       </ng-template>
     </mat-card>
   </div>
 
-  <mat-card>
+  <mat-card class="surface-card table-card">
     <div class="state" *ngIf="loading">
       <mat-progress-spinner mode="indeterminate" diameter="36"></mat-progress-spinner>
       <span>Chargement des résultats PMU...</span>
@@ -109,7 +120,12 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="selectResult(row)"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="selectResult(row)"
+          [class.selected-row]="selectedResult === row"
+        ></tr>
       </table>
     </div>
   </mat-card>

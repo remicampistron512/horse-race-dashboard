@@ -1,7 +1,35 @@
+:host {
+  display: block;
+  min-height: 100%;
+  background: linear-gradient(180deg, #f5f7ff 0%, #eff3fb 100%);
+}
+
 .page {
+  max-width: 1360px;
+  margin: 0 auto;
   display: grid;
-  gap: 16px;
-  padding: 16px;
+  gap: 20px;
+  padding: 24px;
+}
+
+.page-header {
+  h1 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    color: #1f2a44;
+  }
+
+  p {
+    margin: 6px 0 0;
+    color: #556178;
+  }
+}
+
+.surface-card {
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.06);
+  border: 1px solid #e5eaf4;
 }
 
 .filters {
@@ -16,12 +44,35 @@
   gap: 8px;
   align-items: center;
   min-height: 56px;
+  flex-wrap: wrap;
 }
 
 .content-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 20px;
+}
+
+h3 {
+  margin: 0;
+  color: #1f2a44;
+  font-size: 1.1rem;
+}
+
+.card-subtitle {
+  margin: 4px 0 14px;
+  color: #67758e;
+  font-size: 0.9rem;
+}
+
+.chart-wrapper {
+  min-height: 280px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px 16px;
 }
 
 .state {
@@ -33,29 +84,50 @@
 
 .table-wrapper {
   overflow-x: auto;
+  border: 1px solid #e5eaf4;
+  border-radius: 12px;
 }
 
 table {
   width: 100%;
+  background: #fff;
+}
+
+th.mat-mdc-header-cell {
+  font-weight: 700;
+  color: #21314f;
+  background: #f6f8fc;
 }
 
 tr.mat-mdc-row {
   cursor: pointer;
+  transition: background-color 120ms ease;
+}
+
+tr.mat-mdc-row:hover {
+  background: #f8faff;
+}
+
+tr.mat-mdc-row.selected-row {
+  background: #e8f0ff;
 }
 
 .error {
   color: #b3261e;
 }
 
-.empty {
-  color: rgba(0, 0, 0, 0.7);
+.empty,
+.empty-state {
+  color: #52627f;
+  margin: 6px 0;
 }
 
 .stat-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0 0 10px;
+  margin: 0;
+  color: #2f3f5c;
 }
 
 .stat-item mat-icon {
@@ -63,4 +135,18 @@ tr.mat-mdc-row {
   font-size: 20px;
   width: 20px;
   height: 20px;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 16px;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
 }
