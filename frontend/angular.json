@@ -10,6 +10,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "outputPath": "dist/horse-race-dashboard-frontend",
             "browser": "src/main.ts",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
@@ -19,9 +20,14 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": { "buildTarget": "horse-race-dashboard-frontend:build" }
+          "options": {
+            "buildTarget": "horse-race-dashboard-frontend:build"
+          }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
